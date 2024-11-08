@@ -4,9 +4,10 @@ services:
   init-letsencrypt:
     image: alpine:latest
     volumes:
-      - .:/app
-    working_dir: /app
-    command: sh -c "chmod +x /app/init-letsencrypt.sh && /app/init-letsencrypt.sh"
+      - ./init-letsencrypt.sh:/init-letsencrypt.sh:ro
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: sh -c "chmod +x /init-letsencrypt.sh && /init-letsencrypt.sh"
 
   nginx:
     image: nginx:alpine
@@ -20,8 +21,7 @@ services:
       - ./build:/usr/share/nginx/html
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
-      init-letsencrypt:
-        condition: service_completed_successfully
+      - init-letsencrypt
     
   certbot:
     image: certbot/certbot
