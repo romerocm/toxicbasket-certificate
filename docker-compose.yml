@@ -2,13 +2,11 @@ version: "3.8"
 
 services:
   init-letsencrypt:
-    image: docker/compose:1.29.2
+    image: alpine:latest
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - .:/app
     working_dir: /app
-    entrypoint: /bin/sh
-    command: -c "chmod +x /app/init-letsencrypt.sh && /app/init-letsencrypt.sh"
+    command: sh -c "chmod +x /app/init-letsencrypt.sh && /app/init-letsencrypt.sh"
 
   nginx:
     image: nginx:alpine
@@ -22,7 +20,8 @@ services:
       - ./build:/usr/share/nginx/html
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
-      - certificate
+      init-letsencrypt:
+        condition: service_completed_successfully
     
   certbot:
     image: certbot/certbot
