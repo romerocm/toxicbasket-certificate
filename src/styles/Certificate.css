@@ -1,0 +1,138 @@
+.certificate {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 40px;
+}
+
+.certificate-content {
+  position: relative;
+  border: 2px solid #000;
+  padding: 40px;
+  text-align: center;
+  font-family: 'Times New Roman', serif;
+  background: linear-gradient(to bottom right, #fff, #f0f0f0);
+}
+
+.official-seal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 12px;
+  color: #666;
+  border: 1px solid #666;
+  border-radius: 50%;
+  padding: 10px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  border-bottom: 2px solid #000;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.company-logo {
+  max-height: 60px;
+  width: auto;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 28px;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.header h2 {
+  font-size: 20px;
+  font-style: italic;
+  margin: 10px 0;
+}
+
+.main-content {
+  margin: 30px 0;
+  font-size: 18px;
+}
+
+.recipient-name {
+  border-bottom: 1px solid #000;
+  width: 60%;
+  margin: 20px auto;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.main-content h3 {
+  font-size: 24px;
+  margin: 10px 0;
+  color: #1a1a1a;
+}
+
+.validity {
+  margin: 30px 0;
+  font-style: italic;
+  font-size: 16px;
+}
+
+.signatures {
+  display: flex;
+  justify-content: space-around;
+  margin: 40px 0;
+}
+
+.signature-block {
+  width: 200px;
+}
+
+.signature-line {
+  border-top: 1px solid #000;
+  margin-top: 40px;
+  padding-top: 10px;
+}
+
+.footer {
+  font-size: 12px;
+  color: #666;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+}
+
+.print-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.print-button:hover {
+  background-color: #333;
+}
+
+@media print {
+  .print-button {
+    display: none;
+  }
+  
+  .certificate {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .certificate-content {
+    border: 2px solid #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
