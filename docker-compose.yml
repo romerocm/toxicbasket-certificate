@@ -4,10 +4,16 @@ services:
   init-letsencrypt:
     image: alpine:latest
     volumes:
-      - ./init-letsencrypt.sh:/init-letsencrypt.sh:ro
+      - ./init-letsencrypt.sh:/init-letsencrypt.sh
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: sh -c "chmod +x /init-letsencrypt.sh && /init-letsencrypt.sh"
+    command: >
+      sh -c "
+        mkdir -p /var/www/certbot /etc/letsencrypt &&
+        chmod -R 755 /var/www/certbot /etc/letsencrypt &&
+        chmod +x /init-letsencrypt.sh &&
+        /init-letsencrypt.sh
+      "
 
   nginx:
     image: nginx:alpine
@@ -34,12 +40,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     volumes:
       - ./src:/app/src
       - ./public:/app/public
       - /app/node_modules
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - init-letsencrypt
