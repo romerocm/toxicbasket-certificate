@@ -1,6 +1,15 @@
 version: "3.8"
 
 services:
+  init-letsencrypt:
+    image: docker/compose:1.29.2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/app
+    working_dir: /app
+    entrypoint: /bin/sh
+    command: -c "chmod +x init-letsencrypt.sh && ./init-letsencrypt.sh"
+
   nginx:
     image: nginx:alpine
     ports:
