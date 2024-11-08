@@ -7,6 +7,7 @@ services:
       - ./certbot/www:/var/www/certbot
     command: >
       sh -c "
+        mkdir -p /etc/letsencrypt /var/www/certbot &&
         cp /init-letsencrypt.sh /tmp/ &&
         chmod +x /tmp/init-letsencrypt.sh &&
         /tmp/init-letsencrypt.sh
