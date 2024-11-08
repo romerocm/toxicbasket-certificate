@@ -7,7 +7,13 @@ services:
       - ./init-letsencrypt.sh:/init-letsencrypt.sh
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: sh -c "chmod +x /init-letsencrypt.sh && /init-letsencrypt.sh"
+    command: >
+      sh -c "
+        mkdir -p /var/www/certbot /etc/letsencrypt &&
+        chmod -R 755 /var/www/certbot /etc/letsencrypt &&
+        chmod +x /init-letsencrypt.sh &&
+        /init-letsencrypt.sh
+      "
 
   nginx:
     image: nginx:alpine
