@@ -1,12 +1,42 @@
 version: "3.8"
 
 services:
+  init-letsencrypt:
+    image: docker/compose:1.29.2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/app
+    working_dir: /app
+    entrypoint: /bin/sh
+    command: -c "chmod +x init-letsencrypt.sh && ./init-letsencrypt.sh"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./build:/usr/share/nginx/html
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - certificate
+    
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
   certificate:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "3000:80"
+    expose:
+      - "3000"
     volumes:
       - ./src:/app/src
       - ./public:/app/public
